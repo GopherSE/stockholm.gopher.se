@@ -20,6 +20,8 @@
     <script>
       window.fitText( document.getElementById("headline"), 0.9);
 
+      var $next_meetup_data = null;
+
       // Get the Meetup event data
       meetup    = document.getElementById('meetup');
       eventsUrl = "http://data.gopher.se/meetup/Go-Stockholm/events.json";
@@ -29,7 +31,9 @@
         if (req.readyState == 4 && req.status == 200){
           data = JSON.parse(req.responseText);
 
-          if(data.results) {
+          $next_meetup_data = data;
+
+          if(data.results && data.results[0].announced) {
             event    = data.results[0];
             map_html = "";
 
