@@ -53,7 +53,8 @@
                            '&size=' + map_size + 'x' + Math.ceil(map_size*map_h_ratio) + '&sensor=false&' +
                            'center=' + map_latlon + '&markers=size:' + map_marker + '|color:blue|' + map_latlon;
 
-              map_html   = "<img class='map' src='" + map_url + "' title='" + map_title + "' />";
+              map_html   = '<h3 class="map_header">' + map_title +'</h3>' +
+                           "<img class='map' src='" + map_url + "' title='" + map_title + "' />";
             }
 
             meetup.innerHTML += "<div id='next_meetup'>" +
