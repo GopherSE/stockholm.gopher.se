@@ -29,6 +29,10 @@ h1 {
   margin: 5% auto 5%;
 }
 
+h2 span {
+  word-break: keep-all;
+}
+
 a {
   color: #375EAB;
 }
