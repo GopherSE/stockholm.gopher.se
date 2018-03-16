@@ -33,6 +33,10 @@
 
           $next_meetup_data = data;
 
+          if(data.results.length == 0) {
+            window.location.replace("https://www.meetup.com/Go-Stockholm/");
+          }
+
           if(data.results && data.results[0].announced) {
             event    = data.results[0];
             map_html = "";
@@ -73,8 +77,6 @@
                                 "</div>"
 
             console.log(event);
-          } else {
-            window.location.replace("https://www.meetup.com/Go-Stockholm/");
           }
         }
       }
