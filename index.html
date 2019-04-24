@@ -38,32 +38,9 @@
           }
 
           if(data.results && data.results[0].announced) {
-            event    = data.results[0];
-            map_html = "";
+            event = data.results[0];
 
             next_meetup_width = meetup.offsetWidth-2;
-
-            if(event.venue) {
-              map_latlon  = event.venue.lat + ',' + event.venue.lon;
-              map_title   = event.venue.name + ", " + event.venue.address_1;
-              map_size    = Math.ceil(next_meetup_width/2);
-              map_marker  = 'large';
-              map_zoom    = 17;
-              map_h_ratio = 0.7;
-
-              if(map_size < 300) {
-                map_zoom    = 15;
-                map_h_ratio = 1.4;
-              }
-
-              map_url    = 'http://maps.googleapis.com/maps/api/staticmap?' +
-                           'region=se&scale=2&zoom=' + map_zoom +
-                           '&size=' + map_size + 'x' + Math.ceil(map_size*map_h_ratio) + '&sensor=false&' +
-                           'center=' + map_latlon + '&markers=size:' + map_marker + '|color:blue|' + map_latlon;
-
-              map_html   = '<h3 class="map_header">' + map_title +'</h3>' +
-                           "<img class='map' src='" + map_url + "' title='" + map_title + "' />";
-            }
 
             meetup.innerHTML += "<div id='next_meetup'>" +
                                 "<h2>Next Meetup: <span>" + moment(event.time).format("YYYY-MM-DD HH:mm") + "</span></h2>" +
@@ -73,7 +50,6 @@
                                 "<p>" + event.description + "</p>" +
                                 "<h3 class='how_to_find_us'>How to find us</h3>" +
                                 "<p>" + event.how_to_find_us + "</p>" +
-                                map_html +
                                 "</div>"
 
             console.log(event);
