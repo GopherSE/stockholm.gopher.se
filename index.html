@@ -1,14 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Stockholm.Gopher.SE</title>
     <meta charset="utf-8">
-    <title>Go Stockholm Conference 2018</title>
-    <style>
-      body { background-color: #36a0ce; margin: 0; }
-      #schedule { width: 100%; }
-    </style>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <script src="//use.edgefonts.net/kaushan-script:n4.js"></script>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <img id="schedule" src="https://data.gopher.se/meetup/Go-Stockholm/conference/2018/go-stockholm-conference-2018-schedule.png">
+    <div class="container">
+      <header>
+        <h1 id="headline">Stockholm.Gopher.SE</h1>
+      </header>
+
+      <div id="meetup"></div>
+    </div>
+    <script src="/assets/fittext.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script>
+      window.fitText( document.getElementById("headline"), 0.9);
+
+      var $next_meetup_data = null;
+
+      // Get the Meetup event data
+      meetup    = document.getElementById('meetup');
+      eventsUrl = "https://data.gopher.se/meetup/Go-Stockholm/events.json";
+
+      req = new XMLHttpRequest();
+      req.onreadystatechange = function(){
+        if (req.readyState == 4 && req.status == 200){
+          data = JSON.parse(req.responseText);
+
+          $next_meetup_data = data;
+
+          if(data.results.length == 0) {
+            window.location.replace("https://www.meetup.com/Go-Stockholm/");
+          }
+
+          if(data.results && data.results[0].announced) {
+            event    = data.results[0];
+            map_html = "";
+
+            next_meetup_width = meetup.offsetWidth-2;
+
+            if(event.venue) {
+              map_latlon  = event.venue.lat + ',' + event.venue.lon;
+              map_title   = event.venue.name + ", " + event.venue.address_1;
+              map_size    = Math.ceil(next_meetup_width/2);
+              map_marker  = 'large';
+              map_zoom    = 17;
+              map_h_ratio = 0.7;
+
+              if(map_size < 300) {
+                map_zoom    = 15;
+                map_h_ratio = 1.4;
+              }
+
+              map_url    = 'http://maps.googleapis.com/maps/api/staticmap?' +
+                           'region=se&scale=2&zoom=' + map_zoom +
+                           '&size=' + map_size + 'x' + Math.ceil(map_size*map_h_ratio) + '&sensor=false&' +
+                           'center=' + map_latlon + '&markers=size:' + map_marker + '|color:blue|' + map_latlon;
+
+              map_html   = '<h3 class="map_header">' + map_title +'</h3>' +
+                           "<img class='map' src='" + map_url + "' title='" + map_title + "' />";
+            }
+
+            meetup.innerHTML += "<div id='next_meetup'>" +
+                                "<h2>Next Meetup: <span>" + moment(event.time).format("YYYY-MM-DD HH:mm") + "</span></h2>" +
+                                "<h3 class='event_name'>" +
+                                "<a href='" + event.event_url + "'>" + event.name + "</a>" +
+                                "</h3>" +
+                                "<p>" + event.description + "</p>" +
+                                "<h3 class='how_to_find_us'>How to find us</h3>" +
+                                "<p>" + event.how_to_find_us + "</p>" +
+                                map_html +
+                                "</div>"
+
+            console.log(event);
+          }
+        }
+      }
+
+      req.open("GET", eventsUrl, true);
+      req.send();
+    </script>
   </body>
 </html>
